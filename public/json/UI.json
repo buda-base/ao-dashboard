@@ -1,48 +1,54 @@
 {
   "title": {
-    "data": { 
-      "text":"" 
-    }
+    "data": [ "text" ]
   },
   "description": {
-    "data":{
-      "text": "",
-      "type": [ 
+    "data": [
+      "text", [ 
         "ingest", 
         "distribution", { 
           "id": "backlogs",
-          "label": "backlogs processing"         
+          "label": "Backlogs processing"         
         },
         "other"
       ]
-    }
+    ]
   },
   "staff":{
-    "data": [{
-      "text": [ "", "" ]
-    }]
+    "data": [ "text", "text" ]
   },
   "dates":{
-    "data": [{
-      "text": "",
-      "date": ""
-    }]
+    "data": [ "text", "date" ]
   },
   "links":{
-    "data": [{ 
-      "text" : ""
-    }]
+    "data": [ "text" ]
   },
   "contents":{
     "label": "Contents description",
-    "data": {
-      "text": [ 
-        "",
-        [ "Current work scope", "" ]
-      ]
-    }
+    "data": [ "text" ],
+    "unique": true
+  },
+  "scope":{
+    "label": "Current work scope",
+    "data": [ "text" ],
+    "unique": true
   },
   "status":{
-
+    "backlog":{
+      "label":"Backlog size",
+      "data": [ "text", "date" ],
+      "unique": true
+    },
+    "velocity": {
+      "data": [ "graph" ],
+      "value": "completion"
+    },
+    "completion":{
+      "data": [ "number", "date" ],
+      "hidden": true
+    },
+    "impediments":{
+      "data":[ "text" ]
+    }
   }
 }
