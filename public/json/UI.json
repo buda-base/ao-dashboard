@@ -1,0 +1,48 @@
+{
+  "title": {
+    "data": { 
+      "text":"" 
+    }
+  },
+  "description": {
+    "data":{
+      "text": "",
+      "type": [ 
+        "ingest", 
+        "distribution", { 
+          "id": "backlogs",
+          "label": "backlogs processing"         
+        },
+        "other"
+      ]
+    }
+  },
+  "staff":{
+    "data": [{
+      "text": [ "", "" ]
+    }]
+  },
+  "dates":{
+    "data": [{
+      "text": "",
+      "date": ""
+    }]
+  },
+  "links":{
+    "data": [{ 
+      "text" : ""
+    }]
+  },
+  "contents":{
+    "label": "Contents description",
+    "data": {
+      "text": [ 
+        "",
+        [ "Current work scope", "" ]
+      ]
+    }
+  },
+  "status":{
+
+  }
+}
