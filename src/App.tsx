@@ -1,24 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment, TextField } from '@mui/material';
+
+import ViewProject from "./components/ViewProject"
+
 import './App.css';
+
+import ui from "./json/UI.json"
+import example from "./json/example.json"
+import example_b from "./json/example-bis.json"
+import example_t from "./json/example-ter.json"
+const projects = [ example, example_b, example_t ]
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="view-all">
+        <h1>AO Dashboard</h1>
+        <header>
+          <TextField 
+            disabled
+            placeholder="Filter projects" 
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </header>
+        <div>
+          {projects.map( (p,i) => <ViewProject project={p} key={i} />)}
+        </div>
+      </div>
     </div>
   );
 }

@@ -41,11 +41,12 @@
     },
     "velocity": {
       "data": [ "graph" ],
-      "value": "completion"
+      "source": "completion"
     },
     "completion":{
       "data": [ "number", "date" ],
-      "hidden": true
+      "hidden": true,
+      "array": true
     },
     "impediments":{
       "data":[ "text" ]

@@ -1,0 +1,41 @@
+{
+  "title":{
+    "text": "Crop OCR for Google Books"
+  },
+  "description":{
+    "text": "Crop and republish a defined set of works",
+    "type": "other"
+  },
+  "staff":[{
+    "text": [ "Jim Katz", "lead" ]
+  }],
+  "dates":[{
+      "text": "added to dashboard",
+      "date": "2023/01/12"
+    },{
+      "text": "requested",
+      "date": "2022/02/09"
+    },{
+      "text": "due"
+  }],
+  "links":[{
+    "text": "[Cropping for OCR - Github Archive Ops 604](https://github.com/buda-base/archive-ops/issues/604)"
+  }],
+  "contents": {
+    "text": "32 works that are of interest to eText people. These are described as “modern” texts.  \nChecking copyright status.\n\n8200 source images, est.  16400 dest images"
+  },
+  "scope":{
+    "text":"Named works are in the issue: https://github.com/buda-base/archive-ops/issues/604"
+  },
+  "status":{  
+    "backlog":{ 
+      "date": "2023/11/01",
+      "text": "unstarted" 
+    },
+    "impediments":[{
+      "text": "Project lead doesn’t think we should transform and distributed copyrighted works"
+    },{
+      "text": "Other cropping backlogs, daily work, no deadline specified"
+    }]
+  }
+}

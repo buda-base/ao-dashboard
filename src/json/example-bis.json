@@ -1,0 +1,21 @@
+{
+  "title":{
+    "text": "Lorem ipsum dolor sit amet"
+  },
+  "description":{
+    "text": "Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed",
+    "type": "ingest"
+  },
+  "staff":[{
+    "text": [ "John Doe", "lead" ]
+  },{
+    "text": [ "Jack Smith", "other contributor" ]
+  }],
+  "dates":[{ 
+    "text":"due", 
+    "date": "2023/05/01" 
+  },{ 
+    "text":"added to dashboard", 
+    "date": "2023/01/13" 
+  }]
+}
