@@ -1,6 +1,4 @@
-import { Margin } from "@mui/icons-material"
 import debugFactory from "debug"
-import React from "react"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -15,7 +13,6 @@ export default function ViewProject(props:{ project:ProjectData }) {
   debug(project,map)
 
   const localizedDate = (date: string) => {
-    let res = ""
     const vals = date.split("/").map(d => Number(d))
     const ev = new Date(Date.UTC(vals[0],vals[1]-1,vals[2]))
     return ev.toLocaleDateString()

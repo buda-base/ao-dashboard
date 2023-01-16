@@ -6,7 +6,6 @@ import ViewProject from "./components/ViewProject"
 
 import './App.css';
 
-import ui from "./json/UI.json"
 import example from "./json/example.json"
 import example_b from "./json/example-bis.json"
 import example_t from "./json/example-ter.json"
