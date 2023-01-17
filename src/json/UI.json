@@ -1,6 +1,7 @@
 {
   "title": {
-    "data": [ "text" ]
+    "data": [ "text" ],
+    "unique": true
   },
   "description": {
     "data": [
@@ -12,7 +13,8 @@
         },
         "other"
       ]
-    ]
+    ],
+    "unique": true
   },
   "staff":{
     "data": [ "text", "text" ]
@@ -21,23 +23,27 @@
     "data": [ "text", "date" ]
   },
   "links":{
-    "data": [ "text" ]
+    "data": [ "text" ],
+    "md": true
   },
   "contents":{
     "label": "Contents description",
     "data": [ "text" ],
-    "unique": true
+    "unique": true,
+    "md": true
   },
   "scope":{
     "label": "Current work scope",
     "data": [ "text" ],
-    "unique": true
+    "unique": true,
+    "md": true
   },
   "status":{
     "backlog":{
       "label":"Backlog size",
       "data": [ "text", "date" ],
-      "unique": true
+      "unique": true,
+      "md": true
     },
     "velocity": {
       "data": [ "graph" ],
@@ -49,7 +55,8 @@
       "array": true
     },
     "impediments":{
-      "data":[ "text" ]
+      "data":[ "text" ],
+      "md": true
     }
   }
 }

@@ -25,7 +25,7 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
 
   debug("data:",data)
 
-  return <div className="project" onClick={() => navigate("/edit/" + index) }>
+  return <div className="project" id={"project-"+index} onClick={() => navigate("/edit/" + index) }>
     <header>
       <div>
           <div className="desc gen"><div>Description:</div>{project.description?.text}</div>
