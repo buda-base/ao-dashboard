@@ -1,5 +1,6 @@
 import debugFactory from "debug"
 import ReactMarkdown from 'react-markdown'
+import { useNavigate } from "react-router-dom"
 import remarkGfm from 'remark-gfm'
 
 import ProjectData from "../types/ProjectData"
@@ -7,9 +8,9 @@ import Sparkline from "./Sparkline"
 
 const debug = debugFactory("ao:view")
 
-export default function ViewProject(props:{ project:ProjectData }) {
+export default function ViewProject(props:{ project:ProjectData, index: number }) {
 
-  const { project } = props  
+  const { project, index } = props  
   const map = new Map(Object.entries(project));
   debug(project,map)
 
@@ -22,9 +23,11 @@ export default function ViewProject(props:{ project:ProjectData }) {
   const total = project.status?.total?.n || 100
   const data = project.status?.completion?.map(val => 100 * val.n / total) || []
 
+  const navigate = useNavigate()
+
   debug("data:",data)
 
-  return <div className="project">
+  return <div className="project" onClick={() => navigate("/edit/" + index) }>
     <header>
       <div>
           <div className="desc gen"><div>Description:</div>{project.description?.text}</div>

@@ -20,9 +20,12 @@ code {
 
 .App { background: #ddd; padding:0; display:flex; justify-content: center; min-height:100vh; } 
 
+.edit-all,
 .view-all { width: 1440px;  background:#efefef; padding-top:80px; text-align: left;}
 
+.edit-all h1,
 .view-all h1 { background:white; height:80px; line-height: 80px; position:absolute; left:0; right:0; top:0; margin-top: 0; text-align: center;}
+.edit-all > div,
 .view-all > div { display:flex; flex-direction: column; align-items: center; position: relative;  }
 
 .view-all > header { background:#fce08e; padding:30px; text-align: center; }
@@ -33,7 +36,7 @@ code {
 .view-all > header + div { padding: 60px 0; }
 
 .view-all .project { width:1024px; padding:20px; background:white; border: 1px solid rgba(0,0,0,0.125); box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
-  border-radius: 0.25rem; margin-bottom:30px;
+  border-radius: 0.25rem; margin-bottom:30px; cursor: pointer;
 }
 .view-all .project:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.19),0 6px 6px rgba(0,0,0,0.23); }
 .view-all .project h2 { text-align:right; margin:0; font-size:20px;  }
