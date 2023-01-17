@@ -11,8 +11,6 @@ const debug = debugFactory("ao:view")
 export default function ViewProject(props:{ project:ProjectData, index: number }) {
 
   const { project, index } = props  
-  const map = new Map(Object.entries(project));
-  debug(project,map)
 
   const localizedDate = (date: string) => {
     const vals = date.split("/").map(d => Number(d))

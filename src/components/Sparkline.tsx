@@ -1,7 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import { min, max } from 'd3-array';
-import { Selection } from 'd3-selection';
 import { line } from 'd3-shape';
 import debugFactory from "debug"
 
@@ -22,18 +20,6 @@ const Sparkline: React.FC<SparklineProps> = ({ data, width, height }) => {
       return;
     }
     const svg = d3.select(svgRef.current);
-
-
-    var color = [
-      "#d7191c",
-      "#fdae61",
-      "#ffffbf",
-      "#a6d96a",
-      "#1a9641"
-    ].reverse();
-
-    //var color = d3.scaleLinear().range(colorRange).domain([1, 2, 3, 4, 5]);
-    //var color = d3.scaleOrdinal().range(colorRange).domain([1, 2, 3, 4, 5]);
 
     var newData2 = [
       { x: 0, y: 0 },
@@ -59,24 +45,24 @@ const Sparkline: React.FC<SparklineProps> = ({ data, width, height }) => {
       });
 
 
-    var linearGradient = svg.append("linearGradient")                
-    .attr("id", "line-gradient")            
-    .attr("gradientUnits", "userSpaceOnUse")    
-    .attr("x1", 0).attr("y1", y(0))         
-    .attr("x2", 0).attr("y2", y(100))      
-    .selectAll("stop")                      
-    .data([                             
-        {offset: "0%", color: "red"},       
-        {offset: "25%", color: "red"},  
-        {offset: "35%", color: "#ffbb00"},        
-        {offset: "60%", color: "#ffbb00"},        
-        {offset: "70%", color: "lawngreen"},    
-        {offset: "100%", color: "lawngreen"}    
-    ])                  
-    .enter()
-    .append("stop")         
-        .attr("offset", function(d) { return d.offset; })   
-        .attr("stop-color", function(d) { return d.color; });   
+    svg.append("linearGradient")                
+      .attr("id", "line-gradient")            
+      .attr("gradientUnits", "userSpaceOnUse")    
+      .attr("x1", 0).attr("y1", y(0))         
+      .attr("x2", 0).attr("y2", y(100))      
+      .selectAll("stop")                      
+      .data([                             
+          {offset: "0%", color: "red"},       
+          {offset: "25%", color: "red"},  
+          {offset: "35%", color: "#ffbb00"},        
+          {offset: "60%", color: "#ffbb00"},        
+          {offset: "70%", color: "lawngreen"},    
+          {offset: "100%", color: "lawngreen"}    
+      ])                  
+      .enter()
+      .append("stop")         
+          .attr("offset", function(d) { return d.offset; })   
+          .attr("stop-color", function(d) { return d.color; });   
         
     svg
       .append("path")

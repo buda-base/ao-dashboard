@@ -88,3 +88,28 @@ code {
 
 .view-all .project .graph { /* position: absolute; display: block; bottom:0; right:0;*/ width:250px;height:150px; z-index: 1; padding:0; flex-shrink: 0; align-self: flex-end;}
 .view-all .project .graph svg { width:100%; height:auto; display: block; /*position: absolute;bottom:0;right:0; */ background:#f9f9f9; box-shadow: 0 0 3px 1px rgba(0,0,0,0.25); }
+
+
+.edit-all > div { flex-direction: row; flex-wrap: nowrap; align-items: flex-start; }
+
+.edit-all nav { width:300px; padding:30px; display: flex; justify-content: flex-end; flex-wrap: wrap; padding-right: 0;}
+.edit-all nav > a { width:250px; display: block; text-decoration: none; color: #444; font-size:14px; margin-top:20px; padding:10px; outline:none;}
+.edit-all nav > a.on { background:white; }
+.edit-all nav > a > div:first-child { font-weight:500; }
+.edit-all nav > a > div:last-child { white-space:nowrap; overflow: hidden; text-overflow: ellipsis; opacity:0.5; color:black; font-size:12px;}
+
+.edit-all main { width: calc(100% - 300px - 250px); margin:30px; }
+.edit-all main .block { background: white; margin:10px; margin-right:0; width:100%; 
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); border: 1px solid rgba(0,0,0,0.125); border-radius: .25rem;
+}
+.edit-all main .block:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19),0 6px 6px rgba(0,0,0,0.23);
+}
+.edit-all main .block { padding:15px; }
+.edit-all main .block h2 { font-size:17px; margin:0; }
+.edit-all main .block.on { min-height:100px; }
+
+.edit-all main + nav { display: block; width:250px; padding-left:20px; }
+.edit-all main + nav span { color: #4a4a4a; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-top: 25px; opacity: 1; display: block; cursor: pointer ; position: relative; z-index: 0;}
+.edit-all main + nav span::before  { position: absolute; width: calc(100% - 20px); height: calc(100% + 20px); left: -10px; top: -10px; background: blue; }
+.edit-all main + nav span.on::before { filter: drop-shadow(0px 2px 2px rgba(212,212,212,0.5));  background: white;  z-index: -1;  content: ''; }
