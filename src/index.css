@@ -33,7 +33,7 @@ code {
 .view-all > header + div { padding: 60px 0; }
 
 .view-all .project { width:1024px; padding:20px; background:white; border: 1px solid rgba(0,0,0,0.125); box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
-  border-radius: 0.25rem; margin-bottom:30px; min-height:300px; 
+  border-radius: 0.25rem; margin-bottom:30px;
 }
 .view-all .project:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.19),0 6px 6px rgba(0,0,0,0.23); }
 .view-all .project h2 { text-align:right; margin:0; font-size:20px;  }
@@ -41,11 +41,9 @@ code {
 .view-all .project header { display:flex; justify-content: space-between; align-items: flex-start; }
 .view-all .project header p { margin:0; text-align:left; }
 
-.view-all .project .desc { font-weight:700; font-size: 13px;}
-
 
 .view-all .project .gen { font-weight:700; font-size: 13px; margin-top:5px; display: flex; align-items: baseline; line-height: 16px; } 
-.view-all .project .gen > div { display: inline-block; margin-left:5px; font-weight: 400; align-items: baseline; margin-top:6px;}
+.view-all .project .gen > div { display: inline-block; margin-left:5px; font-weight: 400; align-items: baseline; /*margin-top:6px; */}
 .view-all .project .gen > div > div { display: block; }
 .view-all .project .gen > div > div + div { margin-top:4px; }
 .view-all .project .gen > div > div:not(:last-child) { margin-right:15px; }
@@ -64,7 +62,11 @@ code {
 .view-all .project .staff span:nth-of-type(2)::after { content:')'; }
 */
 
-.view-all .project main { font-size:13px; }
+.view-all .project .desc { font-weight:400; font-size: 13px; }
+.view-all .project .desc > div { font-weight:700; margin:0 5px 0 0; }
+
+.view-all .project main { font-size:13px; display:flex;  }
+.view-all .project main > div:first-child { width:calc(100% - 250px); }
 
 .view-all .project .with-dates > div { display: inline-block;  } 
 .view-all .project .with-dates > div > div { display: block; }
@@ -76,8 +78,10 @@ code {
 
 .view-all .project .links p { margin:0; }
 
-.view-all .project .status { flex-wrap: wrap; position: relative; min-height:100px; align-items: flex-start;}
-.view-all .project .status > div { width:100%; margin:0; padding-left:20px; display: flex; align-items: baseline;  padding-right:300px;}
+.view-all .project .status { flex-wrap: wrap; position: relative; align-items: flex-start; display:block;}
+.view-all .project .status:has(.graph:first-of-type) { min-height:150px; }
+.view-all .project .status > div { width:100%; margin:0; padding-left:20px; display: flex; align-items: baseline;  /*padding-right:300px; */}
 .view-all .project .status > div > div:first-child { margin-right:5px !important; font-weight: 600;}
-.view-all .project .status .graph { position: absolute; display: block; bottom:0; right:0; width:250px;height:250px; z-index: 1; padding:0;}
-.view-all .project .status .graph svg { width:100%; height:auto; display: block; position: absolute;bottom:0;right:0; background:#eee; }
+
+.view-all .project .graph { /* position: absolute; display: block; bottom:0; right:0;*/ width:250px;height:150px; z-index: 1; padding:0; flex-shrink: 0; align-self: flex-end;}
+.view-all .project .graph svg { width:100%; height:auto; display: block; /*position: absolute;bottom:0;right:0; */ background:#f9f9f9; box-shadow: 0 0 3px 1px rgba(0,0,0,0.25); }

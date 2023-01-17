@@ -1,9 +1,23 @@
 {
   "title":{
-    "text": ""
+    "text": "Other example"
   },
+  "staff":[{
+    "text": [ "Unknown", "Unknown" ]
+  }],
   "description":{
-    "text": "",
-    "type": ""
+    "text": "description",
+    "type": "ingest"
+  },
+  "status":{
+    "total": { "n": 80 },
+    "completion":[
+      { "n": 0, "date": "2023/01/01" },
+      { "n": 10, "date": "2023/01/02" },
+      { "n": 20, "date": "2023/01/03" },
+      { "n": 25, "date": "2023/01/04" },
+      { "n": 26, "date": "2023/01/05" },
+      { "n": 35, "date": "2023/01/06" }
+    ]
   }
 }
