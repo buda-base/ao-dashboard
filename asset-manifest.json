@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/ao-dashboard/static/css/main.0077c712.css",
-    "main.js": "/ao-dashboard/static/js/main.1911bd7f.js",
+    "main.css": "/ao-dashboard/static/css/main.6e0d1bad.css",
+    "main.js": "/ao-dashboard/static/js/main.c1d6a4f6.js",
     "static/js/787.9abb0782.chunk.js": "/ao-dashboard/static/js/787.9abb0782.chunk.js",
     "index.html": "/ao-dashboard/index.html",
-    "main.0077c712.css.map": "/ao-dashboard/static/css/main.0077c712.css.map",
-    "main.1911bd7f.js.map": "/ao-dashboard/static/js/main.1911bd7f.js.map",
+    "main.6e0d1bad.css.map": "/ao-dashboard/static/css/main.6e0d1bad.css.map",
+    "main.c1d6a4f6.js.map": "/ao-dashboard/static/js/main.c1d6a4f6.js.map",
     "787.9abb0782.chunk.js.map": "/ao-dashboard/static/js/787.9abb0782.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0077c712.css",
-    "static/js/main.1911bd7f.js"
+    "static/css/main.6e0d1bad.css",
+    "static/js/main.c1d6a4f6.js"
   ]
 }
