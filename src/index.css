@@ -36,10 +36,15 @@ code {
 .view-all > header + div { padding: 60px 0; }
 
 .view-all .project { width:1024px; padding:20px; background:white; border: 1px solid rgba(0,0,0,0.125); box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); 
-  border-radius: 0.25rem; margin-bottom:30px; cursor: pointer;
+  border-radius: 0.25rem; margin-bottom:30px; 
 }
 .view-all .project:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.19),0 6px 6px rgba(0,0,0,0.23); }
 .view-all .project h2 { text-align:right; margin:0; font-size:20px;  }
+
+.view-all .project h2 a { color:black; text-decoration: none; }
+.view-all .project h2 a svg { margin-top:2px; margin-right:5px; position:absolute; margin-left:-28px; opacity:0.5; display:none;}
+.view-all .project:hover h2 a svg { display: block; }
+.view-all .project h2:hover { border-bottom: 1px solid black; }
 
 .view-all .project header { display:flex; justify-content: space-between; align-items: flex-start; }
 .view-all .project header p { margin:0; text-align:left; }

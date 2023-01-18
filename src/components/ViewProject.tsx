@@ -1,7 +1,8 @@
 import debugFactory from "debug"
 import ReactMarkdown from 'react-markdown'
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import remarkGfm from 'remark-gfm'
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import ProjectData from "../types/ProjectData"
 import Sparkline from "./Sparkline"
@@ -25,7 +26,7 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
 
   debug("data:",data)
 
-  return <div className="project" id={"project-"+index} onClick={() => navigate("/edit/" + index) }>
+  return <div className="project" id={"project-"+index} /*onClick={() => navigate("/edit/" + index) }*/ >
     <header>
       <div>
           <div className="desc gen"><div>Description:</div>{project.description?.text}</div>
@@ -33,7 +34,7 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
             <div>{s.text.map(t => <span>{t}</span>)}</div>
           ))}</div></div> }
       </div>
-      <h2>{project.title.text}</h2>
+      <h2><Link to={"/edit/" + index}><SettingsIcon />{project.title.text}</Link></h2>
     </header>
     <main>
       <div>
@@ -51,14 +52,14 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
           </div>))}</div>
         }</div> }
         { project.links && <div className="links gen">Links: <div>{project.links?.map(l => (
-          <div className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{l.text}</ReactMarkdown></div>
+          <div className="md" /*onClick={ev => ev.stopPropagation()}*/><ReactMarkdown remarkPlugins={[remarkGfm]}>{l.text}</ReactMarkdown></div>
           ))}</div>
         </div> }
         { project.contents && <div className="contents gen">Contents description:
-          <div className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{project.contents.text}</ReactMarkdown></div>        
+          <div className="md" /*onClick={ev => ev.stopPropagation()}*/><ReactMarkdown remarkPlugins={[remarkGfm]}>{project.contents.text}</ReactMarkdown></div>        
         </div> }
         { project.scope && <div className="contents gen">Current work scope:
-          <div className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{project.scope.text}</ReactMarkdown></div>        
+          <div className="md"  /*onClick={ev => ev.stopPropagation()}*/><ReactMarkdown remarkPlugins={[remarkGfm]}>{project.scope.text}</ReactMarkdown></div>        
         </div> }
         { project.status && <div className="status gen with-dates">Status:
           { project.status.backlog && <div>
