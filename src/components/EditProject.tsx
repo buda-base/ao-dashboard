@@ -11,8 +11,9 @@ import ProjectData from "../types/ProjectData";
 import UIData from "../types/UIData"
 
 import json from "../json/UI.json"
+import Sparkline from "./Sparkline";
 
-const debug = debugFactory("ao:view")
+const debug = debugFactory("ao:edit")
 
 export default function EditProject(props:{ projects: ProjectData[], index?:number }) {
 
@@ -28,6 +29,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
   const [on, setOn] = useState("all")
   const [unique, setUnique] = useState(false)
   const [MD, setMD] = useState("")
+  const [showAll, setShowAll] = useState(false)
 
   useEffect( () => {
     if(on === "all") setUnique(false)
@@ -36,9 +38,27 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
   
   debug(index, params, projects, ui, on)
 
-  const renderData = (d:string, i:number, t:any, k:string, v:any) => {            
+  const renderData = (d:string, i:number, t:any, k:string, v:any) => {   
+    //debug("rd:",d,i,t,k,v);         
     const subElems:JSX.Element[] = []
-    if(d === "text") { 
+    
+    if(d === "number") { 
+      let n = t?.n
+      if(!Array.isArray(n)) n = [ n ]
+      subElems.push(<div className="number">
+
+        <TextField
+          type="number"
+          variant="standard"
+          //label={label}
+          value={n[i] || 0}
+          sx={{
+            //'& .MuiInput-underline:before': { borderBottomColor: 'orange' },
+            '& .MuiInput-underline:after': { borderBottomColor: '#d73449' },
+          }}
+          />
+      </div>)
+    } else if(d === "text") { 
       let text = t?.text
       const onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(k+"-"+i); ev.stopPropagation(); }
       const onBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(""); ev.stopPropagation();   }
@@ -54,7 +74,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           value={text[i] || ""}
           sx={{
             //'& .MuiInput-underline:before': { borderBottomColor: 'orange' },
-            '& .MuiInput-underline:after': { borderBottomColor: '#444' } //'#d73449' },
+            '& .MuiInput-underline:after': { borderBottomColor: '#d73449' },
           }}
           />
         { v.md && MD === k+"-"+i && text[i] && <div className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text[i]}</ReactMarkdown></div> }
@@ -69,7 +89,12 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
             setValue(newValue);
           }}
           */                
-          renderInput={(params) => <TextField {...params} variant="standard"/>} 
+          renderInput={(params) => (
+              <TextField {...params} 
+                variant="standard" 
+                sx={{ '& .MuiInput-underline:after': { borderBottomColor: '#d73449' }  }}
+              />
+            )} 
             onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
               throw new Error("Function not implemented.");
             } } 
@@ -77,11 +102,30 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           />
         </div>
       )
-    } 
+    } else if(d === "graph") {
+      let data = t ;
+      let total = project[k.split("-")[0]]
+      if(total.total) total = total.total.n 
+      //debug("data:", data, total)
+      if(total) {
+        subElems.push(
+          <div className="graph">
+            <Sparkline data={data.map( (val:{n:number, date:string}) => 100 * val.n / total)} width={300} height={200} total={total}/>
+          </div> 
+        )
+
+      }
+
+      //}
+      // { project.status && project.status.total && project.status.completion?.length && 
+        
+
+    }
     return subElems
   }
 
   const renderedUI: JSX.Element[] = [], links: JSX.Element[] = []
+  let hasHidden = false
   uiMap.forEach( (v, k) => {
     let title = k[0].toUpperCase()+k.substring(1)
     if(v.label) title = v.label 
@@ -94,16 +138,19 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         elems.push(<div className={"elem"+(!v.unique?" multi":"")}>{subElems}</div>)
       }
     } else {
-      let hasHidden = false
       for(const subK of Object.keys(v)) {
         const w = v[subK]
         if(w.hidden) { 
           hasHidden = true ;
-          continue; 
+          if(!showAll) continue; 
         }
         let data = project[k]
-        if(data && !data[subK]) continue
-        data = data[subK]
+        if(w.source && data[w.source]) { 
+          data = [ data[w.source] ] 
+        } else {
+          if(data && !data[subK]) continue
+          data = data[subK]
+        }
         if(!Array.isArray(data)) data = [ data ]
         let label = subK[0].toUpperCase()+subK.substring(1)
         if(w.label) label = w.label
@@ -114,7 +161,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           elems.push(<div className={"elem"+(!w.unique?" multi":"")}>{subElems}</div>)
           n++
         } 
-      }
+      }      
     }
     renderedUI.push(<div className={'block'+(on === k || on === "all"? " on":"")} onClick={(ev) => { 
         if(unique) { setOn(k) }
@@ -122,6 +169,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       }}>
       <h2>{title}</h2>
       <div>{elems}</div>
+      { hasHidden && <div><span className="hidden-btn" onClick={() => setShowAll(!showAll)}>{!showAll?"Show hidden":"Hide"}</span></div>}
     </div>)
     links.push(<span className={(on === k ? " on":"")}  onClick={(ev) => { 
       setOn(k) 

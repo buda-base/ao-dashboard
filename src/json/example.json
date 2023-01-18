@@ -37,7 +37,7 @@
     },{
       "text": "Other cropping backlogs, daily work, no deadline specified"
     }],
-    "total": { "n": 100 },
+    "total": { "n": 1000 },
     "completion":[
       { "n": 0, "date": "2023/01/01" },
       { "n": 0, "date": "2023/01/02" }

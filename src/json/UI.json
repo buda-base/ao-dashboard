@@ -45,18 +45,24 @@
       "unique": true,
       "md": true
     },
+    "impediments":{
+      "data":[ "text" ],
+      "md": true
+    },
     "velocity": {
       "data": [ "graph" ],
-      "source": "completion"
+      "source": "completion",
+      "unique": true
     },
     "completion":{
       "data": [ "number", "date" ],
       "hidden": true,
       "array": true
     },
-    "impediments":{
-      "data":[ "text" ],
-      "md": true
+    "total":{
+      "data": [ "number" ],
+      "unique": true,
+      "hidden": true
     }
   }
 }

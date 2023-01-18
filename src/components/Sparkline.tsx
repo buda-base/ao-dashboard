@@ -20,6 +20,7 @@ const Sparkline: React.FC<SparklineProps> = ({ data, width, height }) => {
       return;
     }
     const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
 
     var newData2 = [
       { x: 0, y: 0 },
