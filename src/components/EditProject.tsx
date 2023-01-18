@@ -69,9 +69,10 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
             setValue(newValue);
           }}
           */                
-          renderInput={(params) => <TextField {...params} variant="standard"/>} onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
-            throw new Error("Function not implemented.");
-          } } 
+          renderInput={(params) => <TextField {...params} variant="standard"/>} 
+            onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
+              throw new Error("Function not implemented.");
+            } } 
           value={date}                
           />
         </div>
@@ -93,8 +94,13 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         elems.push(<div className={"elem"+(!v.unique?" multi":"")}>{subElems}</div>)
       }
     } else {
+      let hasHidden = false
       for(const subK of Object.keys(v)) {
         const w = v[subK]
+        if(w.hidden) { 
+          hasHidden = true ;
+          continue; 
+        }
         let data = project[k]
         if(data && !data[subK]) continue
         data = data[subK]
@@ -112,19 +118,19 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     }
     renderedUI.push(<div className={'block'+(on === k || on === "all"? " on":"")} onClick={(ev) => { 
         if(unique) { setOn(k) }
-        ev.stopPropagation();
+        if(!document.querySelector("body > [role='dialog']")) ev.stopPropagation();
       }}>
       <h2>{title}</h2>
       <div>{elems}</div>
     </div>)
-    links.push(<span  className={(on === k ? " on":"")}  onClick={(ev) => { 
+    links.push(<span className={(on === k ? " on":"")}  onClick={(ev) => { 
       setOn(k) 
       ev.stopPropagation();
     }}>{title}</span>)
   })
 
   return (
-    <div className="edit-all" onClick={() => { if(unique) setOn("") }} >
+    <div className={"edit-all "+(!unique?" all-on":"")} onClick={() => { if(unique) setOn("") }} >
       <h1>AO Dashboard</h1>
       <div> 
         <nav>
