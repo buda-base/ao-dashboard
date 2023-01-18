@@ -124,7 +124,7 @@ code {
 .edit-all main .block div:has(.md) { flex-wrap: wrap; }
 .edit-all main .block div .md { margin:0; padding:10px; background:#fce08e77; margin-top:15px; font-size:14px; }
 
-.edit-all main + nav { display: block; width:250px; padding-left:20px; right:0; }
+.edit-all main + nav { display: block; width:250px; padding-left:20px; right:calc((100vw - 1440px) / 2 - 20px); }
 .edit-all main + nav span { color: #4a4a4a; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-top: 25px; opacity: 1; display: block; cursor: pointer ; position: relative; z-index: 0;}
 .edit-all main + nav span::before  { position: absolute; width: calc(100% - 20px); height: calc(100% + 20px); left: -10px; top: -10px; background: blue; }
 .edit-all main + nav span.on::before { filter: drop-shadow(0px 2px 2px rgba(212,212,212,0.5));  background: white;  z-index: -1;  content: ''; }
