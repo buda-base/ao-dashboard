@@ -6,6 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import ProjectData from "../types/ProjectData"
 import Sparkline from "./Sparkline"
+import { useLayoutEffect } from "react";
 
 const debug = debugFactory("ao:view")
 
@@ -25,6 +26,12 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
   const navigate = useNavigate()
 
   debug("data:",data)
+
+  useLayoutEffect( () => {
+    document.querySelectorAll(".md a").forEach( (value:Element) => {
+        value.setAttribute("target","_blank")
+    })
+  })
 
   return <div className="project" id={"project-"+index} /*onClick={() => navigate("/edit/" + index) }*/ >
     <header>
@@ -63,14 +70,14 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
         </div> }
         { project.status && <div className="status gen with-dates">Status:
           { project.status.backlog && <div>
-            <div>Backlog size  : </div>
+            <div>Backlog size: </div>
               <div>
                 <span>{project.status.backlog.text}</span>
                 { project.status.backlog.date && <span>{localizedDate(project.status.backlog.date)}</span> }
               </div>
             </div> }
             { project.status.impediments && <div>
-              <div>Impediments : </div>
+              <div>Impediments: </div>
               <ol>{ project.status.impediments.map(l => (
                 <li className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{l.text}</ReactMarkdown></li>
                 ))}</ol>
