@@ -1,5 +1,5 @@
 
-interface UIDataContent {
+export interface UIDataContent {
   label?: string,
   data?: Array<string|{ id: string, label?: string}|Array<string|{ id: string, label?: string}>>,
   unique?:boolean,
