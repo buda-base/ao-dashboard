@@ -60,6 +60,7 @@
       "array": true
     },
     "total":{
+      "label": "Total number of work to process",
       "data": [ "number" ],
       "unique": true,
       "hidden": true

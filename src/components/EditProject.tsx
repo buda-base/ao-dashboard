@@ -62,13 +62,17 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
 
     const save = (key:string, val: number) => {
       const path = k.split("-")
+      debug("save:", key, val, k)
       let obj:any = _.cloneDeep(toSave), objSave = obj
       for(const p of path) {
         debug(p,obj[p],obj)          
         if(obj[p]) obj = obj[p]
       }
       if(obj) obj[key] = val 
-      if(!_.isEqual(objSave, toSave)) replace(objSave, index)
+      if(!_.isEqual(objSave, toSave)) { 
+        setToSave(objSave)
+        replace(objSave, index)
+      }
     }
 
     const subElems:JSX.Element[] = []    
@@ -177,7 +181,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         elems.push(<h4 key={"h4-"+k+"-"+subK}>{label}</h4>)
         let n = 1
         for(const t of data) {          
-          const subElems:JSX.Element[] = w.data.map((d:string, i:number) => renderData(d,i,t,k+"-"+subK+"-"+n,w) )
+          const subElems:JSX.Element[] = w.data.map((d:string, i:number) => renderData(d,i,t,k+"-"+subK+"-"+(n-1),w) )
           elems.push(<div className={"elem"+(!w.unique?" multi":"")} key={"elem-"+n+"-"+subK+"-project"+index}>{subElems}</div>)
           n++
         } 

@@ -18,13 +18,13 @@ export function NumberEdit(props:{n:number, save:(n:number) => void}) {
 
   debug(val,n)
 
-  /*
+  
   useEffect(() => {
     if(val != n) {
       save(val)
     }
   }, [val])
-  */
+  
 
   return (
     <div className="number">
