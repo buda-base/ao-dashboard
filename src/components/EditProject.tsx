@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import debugFactory from "debug"
 import { useParams } from "react-router";
-import { TextField } from "@mui/material";
-import remarkGfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
-import { DatePicker } from "@mui/x-date-pickers";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link } from "react-router-dom";
 import _ from "lodash"
 
@@ -119,9 +117,76 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     return subElems
   }, [MD, index, replace, toSave])
 
+  
   const renderedUI: JSX.Element[] = [], links: JSX.Element[] = []
   let hasHidden = false, key = 0
   uiMap.forEach( (v, k) => {
+    
+    const add = (schema:string[], data:ProjectData, key = k) => {
+      console.log("add:", schema, data, key)
+      const path = key.split("-")
+      let obj:any = _.cloneDeep(toSave), objSave = obj
+      for(const p of path) {
+        debug(p,obj[p],obj)          
+        if(obj[p]) obj = obj[p]
+      }
+      if(obj) { 
+        //debug("obj:",obj, key)
+        if(Array.isArray(obj)) {
+          let newVal:any = {}
+          for(let s of schema) {
+            let val:string|number = ""
+            if(s === "number") { val = 0; s = "n" }
+            if(newVal[s] === undefined) newVal[s] = val 
+            else { 
+              if(!Array.isArray(newVal[s])) newVal[s] = [ newVal[s] ]
+              newVal[s].push(val)
+            }
+          }
+          obj.push(newVal)
+        }
+      }
+      else {
+        //debug("no obj")
+      }
+      if(!_.isEqual(objSave, toSave)) { 
+        setToSave(objSave)
+        replace(objSave, index)
+      } else {
+        debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
+      }
+    }
+
+    const remove = (data:ProjectData, key = k, idx: number) => {
+      console.log("remove:", data, key, idx)
+      const path = key.split("-")
+      let obj:any = _.cloneDeep(toSave), objSave = obj, prevObj = obj, prevK = ""
+      for(const p of path) {
+        prevObj = obj        
+        debug(p,obj[p],obj)          
+        if(obj[p]) { 
+          prevK = p
+          obj = obj[p]
+        }
+      }
+      if(obj) { 
+        debug("obj:", prevObj, prevK, obj, key, idx)
+        if(Array.isArray(obj) && obj.length > idx && prevObj && prevObj[prevK]) {
+          delete obj[idx]
+          prevObj[prevK] = obj.filter(q => q)
+        }
+      }
+      else {
+        //debug("no obj")
+      }
+      if(!_.isEqual(objSave, toSave)) { 
+        setToSave(objSave)
+        replace(objSave, index)
+      } else {
+        debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
+      }
+    }
+
     let title = k[0].toUpperCase()+k.substring(1)
     if(v.label) title = v.label 
     const elems:JSX.Element[] = []
@@ -130,8 +195,11 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       if(!Array.isArray(data)) data = [ data ]
       let n = 0
       for(const t of data) {          
-        const subElems:JSX.Element[] = v.data.map((d:string, i:number) => renderData(d,i,t,k+"-"+n,v) )
-        elems.push(<div className={"elem"+(!v.unique?" multi":"")} key={"elem-"+n}>{subElems}</div>)
+        const subElems:JSX.Element[] = v.data.map(((n) => (d:string, i:number) => renderData(d,i,t,k+"-"+n,v))(n) )
+        elems.push(<div className={"elem"+(!v.unique?" multi":"")} key={"elem-"+n}>
+          {subElems}
+          { !v.unique && <CloseIcon onClick={((n) => () => remove(data, k, n))(n)}/> }
+        </div>)
         n ++
       }
     } else {
@@ -154,10 +222,14 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         elems.push(<h4 key={"h4-"+k+"-"+subK}>{label}</h4>)
         let n = 1
         for(const t of data) {          
-          const subElems:JSX.Element[] = w.data.map((d:string, i:number) => renderData(d,i,t,k+"-"+subK+"-"+(n-1),w) )
-          elems.push(<div className={"elem"+(!w.unique?" multi":"")} key={"elem-"+n+"-"+subK+"-project"+index}>{subElems}</div>)
+          const subElems:JSX.Element[] = w.data.map(((n) => (d:string, i:number) => renderData(d,i,t,k+"-"+subK+"-"+(n-1),w))(n) )
+          elems.push(<div className={"elem"+(!w.unique?" multi":"")} key={"elem-"+n+"-"+subK+"-project"+index}>
+            {subElems}
+            { !w.unique &&<CloseIcon onClick={((n) => () => remove(data, k+"-"+subK, n-1))(n)}/> }
+          </div>)
           n++
         } 
+        if(!w.unique) elems.push(<div><span className="add-btn"  onClick={() => add(w.data, data, k+"-"+subK)}>Add <AddCircleOutlineIcon /></span></div>)
       }      
     }  
     renderedUI.push(<div key={"block-"+key} className={'block'+(on === k || on === "all"? " on":"")} onClick={(ev) => { 
@@ -167,6 +239,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       <h2>{title}</h2>
       <div>{elems}</div>
       { hasHidden && <div><span className="hidden-btn" onClick={() => setShowAll(!showAll)}>{!showAll?"Show hidden":"Hide"}</span></div>}
+      { !v.unique && <div><span className="add-btn" onClick={() => add(v.data, (toSave as any)[k])}>Add <AddCircleOutlineIcon /></span></div>}
     </div>)
     links.push(<span key={"span-"+key} className={(on === k ? " on":"")}  onClick={(ev) => { 
       setOn(k) 

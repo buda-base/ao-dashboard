@@ -1,6 +1,6 @@
 import debugFactory from "debug"
 import ReactMarkdown from 'react-markdown'
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import remarkGfm from 'remark-gfm'
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -24,9 +24,7 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
   const total = project.status?.total?.n || 100
   const data = project.status?.completion?.map(val => 100 * val.n / total) || []
 
-  const navigate = useNavigate()
-
-  debug("data:",data)
+  //debug("data:",data)
 
   useLayoutEffect( () => {
     document.querySelectorAll(".md a").forEach( (value:Element) => {

@@ -56,14 +56,14 @@
     },
     "completion":{
       "data": [ "number", "date" ],
-      "hidden": true,
-      "array": true
+      "hidden": true
     },
     "total":{
       "label": "Total number of work to process",
       "data": [ "number" ],
       "unique": true,
       "hidden": true
-    }
+    },
+    "unique":true
   }
 }

@@ -4,13 +4,8 @@ import debugFactory from "debug"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { DatePicker } from "@mui/x-date-pickers";
-import dayjs, { Dayjs } from 'dayjs';
-
-import { localizedDate } from "./ViewProject";
 
 const debug = debugFactory("ao:n")
-
-
 
 export function NumberEdit(props:{n:number, save:(n:number) => void}) {
 
@@ -23,8 +18,7 @@ export function NumberEdit(props:{n:number, save:(n:number) => void}) {
 
   useEffect(() => {
     if(val != n) { save(val) }
-  }, [val])
-  
+  }, [val])  
 
   return (
     <div className="number">
@@ -42,7 +36,6 @@ export function NumberEdit(props:{n:number, save:(n:number) => void}) {
     </div>
   )
 }
-
 
 export function TextEdit(props:{
     text:string, 
@@ -83,15 +76,13 @@ export function TextEdit(props:{
   )
 }
 
-
-
 export function DateEdit(props:{
   date:string, 
   save:(date:string) => void, 
 }) {
 
 const { date, save } = props
-const [ val, setVal ] = useState(date)
+const [ val, setVal ] = useState(date || "")
 
 debug("date:", date) //, localizedDate(date), dayjs(date.split("/").join("-")))
 
@@ -100,22 +91,28 @@ useEffect( () => {
 }, [date])
 
 useEffect(() => {
-  if(val != date) { save((val as any)?.toISOString()?.split("T")[0].split("-")?.join("/")) }
+    if(val !== date) { save(val) }
 }, [val])
 
 return (
   <div className="date">
-    <DatePicker         
+    <DatePicker    
       renderInput={(params) => (
-          <TextField {...params} 
+        <TextField {...params} 
             variant="standard" 
             sx={{ '& .MuiInput-underline:after': { borderBottomColor: '#d73449' }  }}
           />
         )} 
         onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
-          setVal(value as string)
+          try {    
+            const iso = (value as any)?.toISOString()?.split("T")[0].split("-")?.join("/")
+            setVal(iso)
+          } catch(e) {
+            //console.warn("error in date")
+            setVal("")
+          }
         } } 
-      value={val}                
+      value={val === "" ? null : val}                
     />
   </div>
   )

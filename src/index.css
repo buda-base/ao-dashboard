@@ -119,7 +119,7 @@ code {
 .edit-all main .block.on { height: auto; }
 .edit-all main .block:not(.on) h2 ~ * { display: none; }
 
-.edit-all main .block .elem { margin-top:15px; display:flex; /*padding-right:50px; */ width:100%;  }
+.edit-all main .block .elem { margin-top:15px; display:flex; /*padding-right:50px; */ width:100%; position: relative; }
 .edit-all main .block .elem > div { width:100%; }
 .edit-all main .block .elem > div + div:not(.md) { margin-left:20px; }
 .edit-all main .block .text:has(.md) { flex-wrap: wrap; }
@@ -136,8 +136,9 @@ code {
 .edit-all main header div::before { width:90px; height:90px; content:'AO'; border-radius: 50%; background: white; display: flex; align-items:center; justify-content: center; font-size: 45px; font-weight: 300; }
 
 .edit-all main header a {  border-radius: 3px;  padding: 8px 12px; line-height: 14px; text-align: center; border: none; font-weight: 700; font-size: 12px; text-transform: uppercase; box-shadow: none !important;
-  background-color: #d73449; color: white; text-decoration: none; float:left; margin-top:17px;
+  background-color: #d73449; color: white; text-decoration: none; float:left; margin-top:17px; transition: all 0.15s ease-in-out; border: 1px solid #d73449;
 }
+.edit-all main header a:hover { color:#d73449; background-color: white;}
 
 .edit-all main .block .elem.multi { background-color: #f8f8f8; box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075); border: 1px solid rgba(0,0,0,0.125); border-radius:5px; padding:15px; padding-right:30px;  }
 .edit-all main .block .elem.multi:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.19),0 6px 6px rgba(0,0,0,0.23); }
@@ -152,9 +153,20 @@ code {
 
 .edit-all main .block div:has(.hidden-btn) { margin:30px 0 10px 0; }
 .edit-all main .block div .hidden-btn { border-radius: 3px; padding: 8px 12px; line-height: 14px; text-align: center; border: none; font-weight: 700; font-size: 12px; text-transform: uppercase; box-shadow: none; 
-  background-color: #d73449; color: white; cursor: pointer;
+  background-color: #d73449; color: white; cursor: pointer; transition: all 0.15s ease-in-out; border: 1px solid #d73449;
 }
+.edit-all main .block div .hidden-btn:hover { color:#d73449; background-color: white;}
 
 .edit-all main .block .graph svg { box-shadow: 0 0 5px 1px rgba(0,0,0,0.125); background:#fbfbfb; }
 
 .edit-all main .block .elem .number { width:auto;}
+
+.edit-all main .block div .add-btn { height: 42px; border-radius: 3px; background-color: #172832; width: auto; padding: 0 30px !important; color: white;  font-weight: 600; font-size: 14px; line-height:42px;
+  display:inline-flex; align-items: center; margin-top:15px; cursor: pointer; transition: all 0.15s ease-in-out; border: 1px solid #172832;
+}
+.edit-all main .block div .add-btn svg { margin-left:5px; }
+.edit-all main .block div .add-btn:hover { background-color: white; color: #172832; }
+
+
+.edit-all main .block .elem.multi  > svg { display:none; position: absolute; right:2px; top:2px; cursor: pointer;}
+.edit-all main .block .elem.multi:hover  > svg { display:block; opacity: 0.5;}
