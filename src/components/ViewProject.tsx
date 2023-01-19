@@ -10,15 +10,16 @@ import { useLayoutEffect } from "react";
 
 const debug = debugFactory("ao:view")
 
+export function localizedDate(date: string) {
+  debug("date:",date)
+  const vals = date.split("/").map(d => Number(d))
+  const ev = new Date(Date.UTC(vals[0],vals[1]-1,vals[2]))
+  return ev.toLocaleDateString()
+}
+
 export default function ViewProject(props:{ project:ProjectData, index: number }) {
 
   const { project, index } = props  
-
-  const localizedDate = (date: string) => {
-    const vals = date.split("/").map(d => Number(d))
-    const ev = new Date(Date.UTC(vals[0],vals[1]-1,vals[2]))
-    return ev.toLocaleDateString()
-  }
 
   const total = project.status?.total?.n || 100
   const data = project.status?.completion?.map(val => 100 * val.n / total) || []

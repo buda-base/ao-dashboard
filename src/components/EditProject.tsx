@@ -13,7 +13,7 @@ import UIData from "../types/UIData"
 
 import json from "../json/UI.json"
 import Sparkline from "./Sparkline";
-import { NumberEdit } from "./DataEdit";
+import { DateEdit, NumberEdit, TextEdit } from "./DataEdit";
 
 const debug = debugFactory("ao:edit")
 
@@ -45,7 +45,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
   */
 
   useEffect( () => {
-    debug("project:",JSON.stringify(project,null,3))
+    //debug("project:",JSON.stringify(project,null,3))
     setToSave(project)
   }, [ project ])
 
@@ -58,20 +58,32 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
 
   const renderData = useCallback((d:string, i:number, t:any, k:string, v:any) => {   
 
-    debug("rd:",k,t) //,k,v);         
+    //debug("rd:",k,t) //,k,v);         
 
-    const save = (key:string, val: number) => {
+    const save = (key:string, val: number|string) => {
       const path = k.split("-")
-      debug("save:", key, val, k)
+      //debug("save:", key, val, k, i)
       let obj:any = _.cloneDeep(toSave), objSave = obj
       for(const p of path) {
         debug(p,obj[p],obj)          
         if(obj[p]) obj = obj[p]
       }
-      if(obj) obj[key] = val 
+      if(obj) { 
+        //debug("obj:",obj, key, i)
+        if(obj[key] && Array.isArray(obj[key]) && obj[key].length > i) { 
+          obj[key][i] = val
+        } else {
+          obj[key] = val 
+        }
+      }
+      else {
+        //debug("no obj")
+      }
       if(!_.isEqual(objSave, toSave)) { 
         setToSave(objSave)
         replace(objSave, index)
+      } else {
+        //debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
       }
     }
 
@@ -84,46 +96,13 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       let text = t?.text
       const onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(k+"-"+i); ev.stopPropagation(); }
       const onBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(""); ev.stopPropagation();   }
+      const showMD = () => MD === k+"-"+i
       //debug("text:", t, text)
       if(!Array.isArray(text)) text = [ text ]
-      subElems.push(<div className="text" key={"text-"+k}>
-
-        <TextField
-          {...v.md ? {onFocus, onBlur}:{}}
-          multiline={v.md}
-          variant="standard"
-          //label={label}
-          value={text[i] || ""}
-          sx={{
-            //'& .MuiInput-underline:before': { borderBottomColor: 'orange' },
-            '& .MuiInput-underline:after': { borderBottomColor: '#d73449' },
-          }}
-          />
-        { v.md && MD === k+"-"+i && text[i] && <div className="md"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text[i]}</ReactMarkdown></div> }
-      </div>)
+      subElems.push(<TextEdit text={text[i]} key={"text-"+k+"-project"+index} {...{onFocus, onBlur, showMD}} md={v.md} save={(val) => save("text", val)} />)            
     } else if(d === "date") {
       let date = t?.date            
-      subElems.push(<div className="date" key={"date-"+k}>
-        <DatePicker
-          //value={value}
-          /*
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          */                
-          renderInput={(params) => (
-              <TextField {...params} 
-                variant="standard" 
-                sx={{ '& .MuiInput-underline:after': { borderBottomColor: '#d73449' }  }}
-              />
-            )} 
-            onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
-              throw new Error("Function not implemented.");
-            } } 
-          value={date}                
-          />
-        </div>
-      )
+      subElems.push(<DateEdit date={date} key={"date-"+k+"-project"+index} save={(val) => save("date", val)} />)
     } else if(d === "graph") {
       let data = t ;
       let total = (toSave as any)[k.split("-")[0]]
@@ -135,13 +114,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
             <Sparkline data={data.map( (val:{n:number, date:string}) => 100 * val.n / total)} width={300} height={200} total={total}/>
           </div> 
         )
-
       }
-
-      //}
-      // { project.status && project.status.total && project.status.completion?.length && 
-        
-
     }
     return subElems
   }, [MD, index, replace, toSave])
@@ -157,7 +130,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       if(!Array.isArray(data)) data = [ data ]
       let n = 0
       for(const t of data) {          
-        const subElems:JSX.Element[] = v.data.map((d:string, i:number) => renderData(d,i,t,k,v) )
+        const subElems:JSX.Element[] = v.data.map((d:string, i:number) => renderData(d,i,t,k+"-"+n,v) )
         elems.push(<div className={"elem"+(!v.unique?" multi":"")} key={"elem-"+n}>{subElems}</div>)
         n ++
       }
