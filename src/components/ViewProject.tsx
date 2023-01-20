@@ -35,12 +35,17 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
   return <div className="project" id={"project-"+index} /*onClick={() => navigate("/edit/" + index) }*/ >
     <header>
       <div>
-          <div className="desc gen"><div>Description:</div>{project.description?.text}</div>
+          <div className="desc gen"><div>Description:</div> {project.description?.text} 
+      
+          </div>
           { project.staff && <div className="staff gen">By: <div>{project.staff?.map(s => (
             <div>{s.text.map(t => <span>{t}</span>)}</div>
           ))}</div></div> }
       </div>
-      <h2><Link to={"/edit/" + index}><SettingsIcon />{project.title?.text}</Link></h2>
+      <h2><Link to={"/edit/" + index}><SettingsIcon />{project.title?.text}</Link>
+        <br/>
+        { project.description?.type && <span>{project.description?.type}</span> }
+      </h2>
     </header>
     <main>
       <div>

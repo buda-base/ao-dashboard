@@ -11,7 +11,7 @@ import UIData from "../types/UIData"
 
 import json from "../json/UI.json"
 import Sparkline from "./Sparkline";
-import { DateEdit, NumberEdit, TextEdit } from "./DataEdit";
+import { DateEdit, NumberEdit, TextEdit, TypeEdit } from "./DataEdit";
 
 const debug = debugFactory("ao:edit")
 
@@ -97,7 +97,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     if(d === "number") { 
       let n = t?.n
       if(!Array.isArray(n)) n = [ n ]
-      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(val) => save("n", val)} idx={index}/>)
+      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(val) => save("n", val)} />)
     } else if(d === "text") { 
       let text = t?.text
       const onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(k+"-"+i); ev.stopPropagation(); }
@@ -122,6 +122,10 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           </div> 
         )
       }
+    } else if(Array.isArray(d)) {
+      let type = t?.type
+      //debug("type:",d,type)
+      subElems.push(<TypeEdit type={type} possible={d as any[]} key={"type-"+k+"-project"+index} save={(val) => save("type", val)} />)
     }
     return subElems
   }, [MD, index, replace, toSave])
