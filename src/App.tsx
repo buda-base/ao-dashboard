@@ -20,7 +20,7 @@ import example from "./json/example.json"
 import example_b from "./json/example-bis.json"
 import example_t from "./json/example-ter.json"
 import ProjectData from './types/ProjectData';
-const projectsInit = [ example, example_b, example_t ]
+const projectsInit = [ example, example_b, example_t, {} ]
 
 const debug = debugFactory("ao:app")
 
@@ -30,15 +30,17 @@ function App() {
 
   const replace = useCallback(
     (p:ProjectData, i:number) => {
-      debug("replace:",i,JSON.stringify(p,null,3),projects);
+      //debug("replace:",i,JSON.stringify(p,null,3),projects);
       const newProjects = [ ...projects ]
-      newProjects[i] = p
+      if(i === -1) {
+        newProjects.unshift(p)        
+      } else newProjects[i] = p
       setProjects(newProjects)
   }, [ projects ])
 
   let locale:string = getUserLocale() || 'en'
   if(locale) locale = locale.split("-")[0]
-  debug("locale:",locale)
+  //debug("locale:",locale)
 
   return (
     <div className="App">

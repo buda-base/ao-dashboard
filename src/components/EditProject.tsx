@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import debugFactory from "debug"
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from "react-router-dom";
@@ -33,6 +33,8 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
 
   const [toSave, setToSave] = useState<ProjectData>(project)
 
+  const navigate = useNavigate();
+  
   /*
   let unmounting = false
   useEffect( () => {
@@ -60,11 +62,17 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
 
     const save = (key:string, val: number|string) => {
       const path = k.split("-")
-      //debug("save:", key, val, k, i)
-      let obj:any = _.cloneDeep(toSave), objSave = obj
+      
+      //debug("save:", key, val, k, i, v)
+
+      let obj:any = _.cloneDeep(toSave), objSave = obj, prev
       for(const p of path) {
-        debug(p,obj[p],obj)          
-        if(obj[p]) obj = obj[p]
+        //debug("p:",p,obj[p],obj,v.unique)          
+        if(!obj[p]) {
+          if(!v.unique) obj[p] = []
+          else if(p !== "0") obj[p] = {}
+        }
+        if(!v.unique || p !== "0") obj = obj[p]
       }
       if(obj) { 
         //debug("obj:",obj, key, i)
@@ -72,7 +80,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           obj[key][i] = val
         } else {
           obj[key] = val 
-        }
+        }       
       }
       else {
         //debug("no obj")
@@ -89,7 +97,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     if(d === "number") { 
       let n = t?.n
       if(!Array.isArray(n)) n = [ n ]
-      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(val) => save("n", val)}/>)
+      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(val) => save("n", val)} idx={index}/>)
     } else if(d === "text") { 
       let text = t?.text
       const onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(k+"-"+i); ev.stopPropagation(); }
@@ -103,8 +111,9 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       subElems.push(<DateEdit date={date} key={"date-"+k+"-project"+index} save={(val) => save("date", val)} />)
     } else if(d === "graph") {
       let data = t ;
+      if(!data || !data.map) data = []
       let total = (toSave as any)[k.split("-")[0]]
-      if(total.total) total = total.total.n 
+      if(total?.total) total = total.total?.n 
       //debug("data:", data, total)
       if(total) {
         subElems.push(
@@ -121,14 +130,15 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
   const renderedUI: JSX.Element[] = [], links: JSX.Element[] = []
   let hasHidden = false, key = 0
   uiMap.forEach( (v, k) => {
-    
+
     const add = (schema:string[], data:ProjectData, key = k) => {
-      console.log("add:", schema, data, key)
+      //console.log("add:", schema, data, key)
       const path = key.split("-")
       let obj:any = _.cloneDeep(toSave), objSave = obj
       for(const p of path) {
-        debug(p,obj[p],obj)          
-        if(obj[p]) obj = obj[p]
+        //debug("p:",p,obj[p],obj)          
+        if(!obj[p]) obj[p] = []
+        obj = obj[p]
       }
       if(obj) { 
         //debug("obj:",obj, key)
@@ -153,12 +163,12 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         setToSave(objSave)
         replace(objSave, index)
       } else {
-        debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
+        //debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
       }
     }
 
     const remove = (data:ProjectData, key = k, idx: number) => {
-      console.log("remove:", data, key, idx)
+      //console.log("remove:", data, key, idx)
       const path = key.split("-")
       let obj:any = _.cloneDeep(toSave), objSave = obj, prevObj = obj, prevK = ""
       for(const p of path) {
@@ -183,7 +193,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         setToSave(objSave)
         replace(objSave, index)
       } else {
-        debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
+        //debug("equal:",JSON.stringify(toSave,null,3),JSON.stringify(objSave,null,3))
       }
     }
 
@@ -192,9 +202,9 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     const elems:JSX.Element[] = []
     if(v.data) { 
       let data = (toSave as any)[k]
-      if(!Array.isArray(data)) data = [ data ]
+      if((data || v.unique) && !Array.isArray(data)) data = [ data ]
       let n = 0
-      for(const t of data) {          
+      if(data) for(const t of data) {          
         const subElems:JSX.Element[] = v.data.map(((n) => (d:string, i:number) => renderData(d,i,t,k+"-"+n,v))(n) )
         elems.push(<div className={"elem"+(!v.unique?" multi":"")} key={"elem-"+n}>
           {subElems}
@@ -204,6 +214,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       }
     } else {
       for(const subK of Object.keys(v)) {
+        if(subK === "unique") continue ;
         const w = v[subK]
         if(w.hidden) { 
           hasHidden = true ;
@@ -213,15 +224,19 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         if(w.source && data && data[w.source]) { 
           data = [ data[w.source] ] 
         } else {
-          if(!data || data && !data[subK]) continue
+          if(!data) data = {}
+          if(data && !data[subK]) {
+            if(w.unique) data[subK] = {}
+            else data[subK] = []
+          } 
           data = data[subK]
         }
-        if(!Array.isArray(data)) data = [ data ]
+        if((data || w.unique) && !Array.isArray(data)) data = [ data ]
         let label = subK[0].toUpperCase()+subK.substring(1)
         if(w.label) label = w.label
         elems.push(<h4 key={"h4-"+k+"-"+subK}>{label}</h4>)
         let n = 1
-        for(const t of data) {          
+        if(data) for(const t of data) {          
           const subElems:JSX.Element[] = w.data.map(((n) => (d:string, i:number) => renderData(d,i,t,k+"-"+subK+"-"+(n-1),w))(n) )
           elems.push(<div className={"elem"+(!w.unique?" multi":"")} key={"elem-"+n+"-"+subK+"-project"+index}>
             {subElems}
@@ -247,6 +262,11 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     }}>{title}</span>)
     key ++
   })
+  
+  const create = () => { 
+    replace({} as ProjectData, -1);
+    navigate("/edit/0");
+  }
 
   return (
     <div className={"edit-all "+(!unique?" all-on":"")} onClick={() => { if(unique) setOn("") }} >
@@ -254,10 +274,11 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       <div> 
         <nav>
           { projects.map( (p,i) => <Link key={i} to={"/edit/"+i} onClick={ev => ev.stopPropagation()} className={index == i ? "on" : ""} >
-              <div>{p.title?.text}</div>
-              <div>{p.description?.text}</div>
+              <div>{p.title?.text || "New Project"}</div>
+              <div>{p.description?.text || "No description"}</div>
             </Link>
           )}
+          <div><span className="new-btn" onClick={create}>new project</span></div>
         </nav>
         <main>
           <header><div></div><Link to={"/#project-"+index}>view in list</Link></header>

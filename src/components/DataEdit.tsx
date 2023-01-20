@@ -4,13 +4,17 @@ import debugFactory from "debug"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { DatePicker } from "@mui/x-date-pickers";
+import { useParams } from "react-router";
 
 const debug = debugFactory("ao:n")
 
-export function NumberEdit(props:{n:number, save:(n:number) => void}) {
+export function NumberEdit(props:{n:number, save:(n:number) => void, idx: number}) {
 
-  const { n, save } = props
-  const [ val, setVal ] = useState(n)
+  const { index } = useParams()
+  const { n = 0, save, idx } = props
+  const [ val, setVal ] = useState(n || 0)
+
+  //debug("val:",val+"?=?"+n)
 
   useEffect( () => {
     if(val != n) { setVal(n) }
@@ -46,8 +50,10 @@ export function TextEdit(props:{
     showMD: () => boolean
   }) {
 
-  const { text, save, onFocus, onBlur, md, showMD } = props
-  const [ val, setVal ] = useState(text)
+  const { text = "", save, onFocus, onBlur, md, showMD } = props
+  const [ val, setVal ] = useState(text || "")
+
+  //debug("val:",val+"?=?"+text)
 
   useEffect( () => {
     if(val != text) { setVal(text) }
@@ -81,17 +87,17 @@ export function DateEdit(props:{
   save:(date:string) => void, 
 }) {
 
-const { date, save } = props
-const [ val, setVal ] = useState(date || "")
+const { date = null, save } = props
+const [ val, setVal ] = useState(date ? date : null)
 
-debug("date:", date) //, localizedDate(date), dayjs(date.split("/").join("-")))
+//debug("val:", val+"?=?"+date) // date, localizedDate(date), dayjs(date.split("/").join("-")))
 
 useEffect( () => {
   if(val != date) { setVal(date) }
 }, [date])
 
 useEffect(() => {
-    if(val !== date) { save(val) }
+    if(val != null && val !== date) { save(val) }
 }, [val])
 
 return (
@@ -105,10 +111,11 @@ return (
         )} 
         onChange={function (value: unknown, keyboardInputValue?: string | undefined): void {
           try {    
-            const iso = (value as any)?.toISOString()?.split("T")[0].split("-")?.join("/")
+            const d = value as any
+            const iso = d.$y+"/"+(1+d.$M)+"/"+d.$D                   
             setVal(iso)
           } catch(e) {
-            //console.warn("error in date")
+            console.warn("error in date",e)
             setVal("")
           }
         } } 

@@ -1,6 +1,6 @@
 
 export default interface ProjectData {
-  title: { text: string },
+  title?: { text: string },
   description?: { text: string, type: string },
   staff?: { text: string[] }[],
   dates?: { text: string, date?:string }[],

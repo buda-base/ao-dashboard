@@ -31,7 +31,7 @@ const Sparkline: React.FC<SparklineProps> = ({ data, width, height }) => {
 
     var newData = data.map((v,i) => ({x:i, y:v}));
 
-    debug(newData, newData2)
+    //debug(newData, newData2)
 
     var x = d3.scaleLinear().range([0, width]).domain([0, newData.length - 1]);
     var y = d3.scaleLinear().range([height, 0]).domain([0, 100]);

@@ -40,7 +40,7 @@ export default function ViewProject(props:{ project:ProjectData, index: number }
             <div>{s.text.map(t => <span>{t}</span>)}</div>
           ))}</div></div> }
       </div>
-      <h2><Link to={"/edit/" + index}><SettingsIcon />{project.title.text}</Link></h2>
+      <h2><Link to={"/edit/" + index}><SettingsIcon />{project.title?.text}</Link></h2>
     </header>
     <main>
       <div>

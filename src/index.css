@@ -152,9 +152,11 @@ code {
 .edit-all main .block h4 + .elem:not(.multi):has(.text:first-child) { margin-top:5px; }
 
 .edit-all main .block div:has(.hidden-btn) { margin:30px 0 10px 0; }
+.edit-all nav .new-btn,
 .edit-all main .block div .hidden-btn { border-radius: 3px; padding: 8px 12px; line-height: 14px; text-align: center; border: none; font-weight: 700; font-size: 12px; text-transform: uppercase; box-shadow: none; 
   background-color: #d73449; color: white; cursor: pointer; transition: all 0.15s ease-in-out; border: 1px solid #d73449;
 }
+.edit-all nav .new-btn:hover,
 .edit-all main .block div .hidden-btn:hover { color:#d73449; background-color: white;}
 
 .edit-all main .block .graph svg { box-shadow: 0 0 5px 1px rgba(0,0,0,0.125); background:#fbfbfb; }
@@ -170,3 +172,6 @@ code {
 
 .edit-all main .block .elem.multi  > svg { display:none; position: absolute; right:2px; top:2px; cursor: pointer;}
 .edit-all main .block .elem.multi:hover  > svg { display:block; opacity: 0.5;}
+
+
+.edit-all nav:first-child > div:last-child { margin-top:30px; justify-self: flex-start; width:250px; }
