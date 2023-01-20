@@ -11,7 +11,7 @@ import { useLayoutEffect } from "react";
 const debug = debugFactory("ao:view")
 
 export function localizedDate(date: string) {
-  debug("date:",date)
+  //debug("date:",date)
   const vals = date.split("/").map(d => Number(d))
   const ev = new Date(Date.UTC(vals[0],vals[1]-1,vals[2]))
   return ev.toLocaleDateString()

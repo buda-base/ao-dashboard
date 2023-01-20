@@ -137,7 +137,10 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       let obj:any = _.cloneDeep(toSave), objSave = obj
       for(const p of path) {
         //debug("p:",p,obj[p],obj)          
-        if(!obj[p]) obj[p] = []
+        if(!obj[p]) { 
+          if(key.endsWith(p)) obj[p] = []
+          else obj[p] = {}
+        }
         obj = obj[p]
       }
       if(obj) { 
@@ -155,6 +158,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           }
           obj.push(newVal)
         }
+        //debug("obj!",obj)
       }
       else {
         //debug("no obj")
