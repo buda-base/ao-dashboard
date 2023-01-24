@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MenuItem, TextField } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import debugFactory from "debug"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -17,11 +19,11 @@ export function TypeEdit(props:{type:string, possible:any[], save:(type:string) 
   //debug("val:",type, possible, possible.findIndex( (v,i) => v.id === type || v === type) )
 
   useEffect( () => {
-    if(val != type) { setVal(type) }
+    if(val !== type) { setVal(type) }
   }, [type])
 
   useEffect(() => {
-    if(val != type) { save(val) }
+    if(val !== type) { save(val) }
   }, [val])  
 
   return (
@@ -51,11 +53,11 @@ export function NumberEdit(props:{n:number, save:(n:number) => void }) {
   //debug("val:",val+"?=?"+n)
 
   useEffect( () => {
-    if(val != n) { setVal(n) }
+    if(val !== n) { setVal(n) }
   }, [n])
 
   useEffect(() => {
-    if(val != n) { save(val) }
+    if(val !== n) { save(val) }
   }, [val])  
 
   return (
@@ -90,11 +92,11 @@ export function TextEdit(props:{
   //debug("val:",val+"?=?"+text)
 
   useEffect( () => {
-    if(val != text) { setVal(text) }
+    if(val !== text) { setVal(text) }
   }, [text])
 
   useEffect(() => {
-    if(val != text) { save(val) }
+    if(val !== text) { save(val) }
   }, [val])
   
   return (
@@ -157,4 +159,63 @@ return (
     />
   </div>
   )
+}
+
+
+export function RIDEdit(props:{
+  text:string, 
+  save:(text:string) => void
+}) {
+
+const { text = "", save } = props
+const [ val, setVal ] = useState(text || "")
+const [ RIDs, setRIDs ] = useState<string[]>([])
+const [ tail, setTail ] = useState("")
+
+
+const isRID = (k:string) => k.match(/^([cpgwrti]|mw|wa|was|ut|ie|pr)(\d|eap)[^ ]*$/i)
+
+//debug("val:",val+"?=?"+text)
+
+useEffect( () => {
+  let v = text
+  if(v.includes(",")) {
+    let arr = text.split(/ *, */)
+    const pre = [] 
+    let t = ""
+    for(const r of arr) {
+      if(isRID(r)) pre.push(r)
+      else t = t+(t?", ":"")+r
+    }
+    setTail(t)
+    setRIDs(pre)
+    debug("rids:",arr,pre,t)
+  }
+  if(val !== text) { setVal(text) }
+}, [text])
+
+useEffect(() => {
+  if(val !== text) { save(val) }
+}, [val])
+
+return (
+  <div className="RID">
+      <div>{ RIDs.map(r => <span key={r}><span>{r}</span><CloseIcon/></span>)}</div>
+      <div>
+
+        <TextField
+          //onChange={(ev) => setVal(ev.target.value) }
+          variant="standard"
+          //label={label}
+          value={tail}
+          sx={{
+            //'& .MuiInput-underline:before': { borderBottomColor: 'orange' },
+            '& .MuiInput-underline:after': { borderBottomColor: '#d73449' },
+          }}
+          placeholder={"Comma separated list of RIDs"}
+        />    
+        <AddIcon/>  
+      </div>
+  </div>
+)
 }

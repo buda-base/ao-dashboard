@@ -11,7 +11,7 @@ import UIData from "../types/UIData"
 
 import json from "../json/UI.json"
 import Sparkline from "./Sparkline";
-import { DateEdit, NumberEdit, TextEdit, TypeEdit } from "./DataEdit";
+import { DateEdit, NumberEdit, RIDEdit, TextEdit, TypeEdit } from "./DataEdit";
 
 const debug = debugFactory("ao:edit")
 
@@ -29,7 +29,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
   const [on, setOn] = useState("all")
   const [unique, setUnique] = useState(false)
   const [MD, setMD] = useState("")
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState<{[k:string]:boolean}>({}) // TODO: this should be an array {[string]:boolean}
 
   const [toSave, setToSave] = useState<ProjectData>(project)
 
@@ -121,7 +121,11 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
             <Sparkline data={data.map( (val:{n:number, date:string}) => 100 * val.n / total)} width={300} height={200} total={total}/>
           </div> 
         )
-      }
+      } 
+    } else if(d === "RID") {
+      let text = t?.text
+      if(!Array.isArray(text)) text = [ text ]
+      subElems.push(<RIDEdit text={text[i]} key={"RID-"+k+"-project"+index} save={(val) => save("text", val)} />)            
     } else if(Array.isArray(d)) {
       let type = t?.type
       //debug("type:",d,type)
@@ -132,8 +136,9 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
 
   
   const renderedUI: JSX.Element[] = [], links: JSX.Element[] = []
-  let hasHidden = false, key = 0
+  let key = 0
   uiMap.forEach( (v, k) => {
+    let hasHidden = false
 
     const add = (schema:string[], data:ProjectData, key = k) => {
       //console.log("add:", schema, data, key)
@@ -222,11 +227,12 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       }
     } else {
       for(const subK of Object.keys(v)) {
-        if(subK === "unique") continue ;
+        if(["unique", "label"].includes(subK)) continue ;
         const w = v[subK]
         if(w.hidden) { 
           hasHidden = true ;
-          if(!showAll) continue; 
+          debug("hidden:",w,w.hidden,hasHidden, showAll, k)
+          if(!showAll[k]) continue; 
         }
         let data = (toSave as any)[k]
         if(w.source && data && data[w.source]) { 
@@ -261,7 +267,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       }}>
       <h2>{title}</h2>
       <div>{elems}</div>
-      { hasHidden && <div><span className="hidden-btn" onClick={() => setShowAll(!showAll)}>{!showAll?"Show hidden":"Hide"}</span></div>}
+      { hasHidden && <div><span className="hidden-btn" onClick={() => setShowAll({...showAll, [k]:!showAll[k]})}>{!showAll[k]?"Show hidden":"Hide"}</span></div>}
       { !v.unique && <div><span className="add-btn" onClick={() => add(v.data, (toSave as any)[k])}>Add <AddCircleOutlineIcon /></span></div>}
     </div>)
     links.push(<span key={"span-"+key} className={(on === k ? " on":"")}  onClick={(ev) => { 

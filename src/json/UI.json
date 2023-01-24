@@ -28,9 +28,17 @@
   },
   "contents":{
     "label": "Contents description",
-    "data": [ "text" ],
-    "unique": true,
-    "md": true
+    " ":{
+      "data": [ "text" ],
+      "unique": true,
+      "md": true
+    },
+    "RIDs":{  
+      "label": "List of RIDs",
+      "data": [ "RID" ],
+      "hidden": true
+    },
+    "unique": true
   },
   "scope":{
     "label": "Current work scope",
