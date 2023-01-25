@@ -28,6 +28,8 @@ function App() {
 
   const [projects, setProjects] = useState<ProjectData[]>(projectsInit)
 
+  debug("projects:",projects)
+
   const replace = useCallback(
     (p:ProjectData, i:number) => {
       //debug("replace:",i,JSON.stringify(p,null,3),projects);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MenuItem, TextField } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useParams } from "react-router";
 
-const debug = debugFactory("ao:n")
+const debug = debugFactory("ao:data")
 
 
 export function TypeEdit(props:{type:string, possible:any[], save:(type:string) => void}) {
@@ -169,42 +169,67 @@ export function RIDEdit(props:{
 
 const { text = "", save } = props
 const [ val, setVal ] = useState(text || "")
-const [ RIDs, setRIDs ] = useState<string[]>([])
-const [ tail, setTail ] = useState("")
 
 
 const isRID = (k:string) => k.match(/^([cpgwrti]|mw|wa|was|ut|ie|pr)(\d|eap)[^ ]*$/i)
+const RIDs:{[s:string]:number} = {}
+let t = ""
+if(val) {
+  let arr = val.split(/ *, */)
+  const pre:{[k:string]:number} = {}
+  for(const r of arr) {
+    let state:string[]|number = r.split(":")
+    if(isRID(state[0])) {         
+      RIDs[state[0]] = state?.length > 1 ? Number(state[1]) : 0
+    }
+    else t = t+(t?", ":"")+r
+  }
+}
+const [tail, setTail] = useState(t)
 
-//debug("val:",val+"?=?"+text)
+//debug("val:",val+"?=?"+text+"=?="+Object.keys(RIDs)?.join(", "))
 
 useEffect( () => {
-  let v = text
-  if(v.includes(",")) {
-    let arr = text.split(/ *, */)
-    const pre = [] 
-    let t = ""
-    for(const r of arr) {
-      if(isRID(r)) pre.push(r)
-      else t = t+(t?", ":"")+r
-    }
-    setTail(t)
-    setRIDs(pre)
-    debug("rids:",arr,pre,t)
-  }
-  if(val !== text) { setVal(text) }
+  if(val !== text || (text && !Object.keys(RIDs).length)) { 
+    setVal(text) 
+  } 
 }, [text])
 
 useEffect(() => {
-  if(val !== text) { save(val) }
+  if(val !== text) { save(val) }  
 }, [val])
+
 
 return (
   <div className="RID">
-      <div>{ RIDs.map(r => <span key={r}><span>{r}</span><CloseIcon/></span>)}</div>
+      <div>
+          { Object.keys(RIDs)?.map(r => <span key={r} className={!isRID(r)?"error":""}><div>
+              <span>{r}</span>
+              <TextField select 
+                  value={RIDs[r]}
+                  variant="standard"  
+                  sx={{
+                    '& .MuiInput-underline:before': { border: 'none !important' },
+                    '& .MuiInput-underline:after':  { border: 'none !important' },
+                  }
+                }>
+                  {["unstarted", "in progress", "done"].map( (s,i) => <MenuItem onClick={() => {
+                      const newRIDs = { ...RIDs }
+                      newRIDs[r] = i
+                      setVal(Object.keys(newRIDs).map( r => r+(newRIDs[r] ? ":"+newRIDs[r] : "")).join(", "))
+                  }} value={i} key={s}><span className={"state "+s} ></span><span>{s}</span></MenuItem>)}
+              </TextField>
+            </div><CloseIcon onClick={() => {
+              const newRIDs = { ...RIDs }
+              delete newRIDs[r]
+              setVal(Object.keys(newRIDs).map( r => r+(newRIDs[r] ? ":"+newRIDs[r] : "")).join(", "))
+            }}/></span>
+          )}
+      </div>
       <div>
 
         <TextField
-          //onChange={(ev) => setVal(ev.target.value) }
+          onChange={(ev) => setTail(ev.target.value) }
           variant="standard"
           //label={label}
           value={tail}
@@ -212,9 +237,12 @@ return (
             //'& .MuiInput-underline:before': { borderBottomColor: 'orange' },
             '& .MuiInput-underline:after': { borderBottomColor: '#d73449' },
           }}
-          placeholder={"Comma separated list of RIDs"}
+          placeholder={"Comma separated list of RIDs to add"}
         />    
-        <AddIcon/>  
+        <AddIcon onClick={() => { 
+          setVal(val+(val?", ":"")+tail) 
+          setTail("")
+        }}/>  
       </div>
   </div>
 )

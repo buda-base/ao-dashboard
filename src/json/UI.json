@@ -36,7 +36,8 @@
     "RIDs":{  
       "label": "List of RIDs",
       "data": [ "RID" ],
-      "hidden": true
+      "hidden": true,
+      "unique":true
     },
     "unique": true
   },

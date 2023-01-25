@@ -53,12 +53,12 @@ const Sparkline: React.FC<SparklineProps> = ({ data, width, height }) => {
       .attr("x2", 0).attr("y2", y(100))      
       .selectAll("stop")                      
       .data([                             
-          {offset: "0%", color: "red"},       
-          {offset: "20%", color: "red"},  
-          {offset: "35%", color: "#ffbb00"},        
-          {offset: "60%", color: "#ffbb00"},        
-          {offset: "70%", color: "lawngreen"},    
-          {offset: "100%", color: "lawngreen"}    
+          {offset: "0%", color: "#d73449"},       
+          {offset: "20%", color: "#d73449"},  
+          {offset: "35%", color: "#f5a623"},        
+          {offset: "60%", color: "#f5a623"},        
+          {offset: "70%", color: "#638e33"},    
+          {offset: "100%", color: "#638e33"}    
       ])                  
       .enter()
       .append("stop")         

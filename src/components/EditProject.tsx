@@ -54,7 +54,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     else setUnique(true)
   }, [on])
   
-  //debug("edit:", JSON.stringify(toSave,null,3), index) //index, params, projects, ui, on)
+  debug("edit:", index, toSave) //JSON.stringify(toSave,null,3), index) //index, params, projects, ui, on)
 
   const renderData = useCallback((d:string, i:number, t:any, k:string, v:any) => {   
 
@@ -97,7 +97,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     if(d === "number") { 
       let n = t?.n
       if(!Array.isArray(n)) n = [ n ]
-      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(val) => save("n", val)} />)
+      subElems.push(<NumberEdit n={n} key={"n-"+k+"-project"+index} save={(newVal) => save("n", newVal)} />)
     } else if(d === "text") { 
       let text = t?.text
       const onFocus: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = (ev) => { setMD(k+"-"+i); ev.stopPropagation(); }
@@ -105,10 +105,10 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       const showMD = () => MD === k+"-"+i
       //debug("text:", t, text)
       if(!Array.isArray(text)) text = [ text ]
-      subElems.push(<TextEdit text={text[i]} key={"text-"+k+"-project"+index} {...{onFocus, onBlur, showMD}} md={v.md} save={(val) => save("text", val)} />)            
+      subElems.push(<TextEdit text={text[i]} key={"text-"+k+"-project"+index} {...{onFocus, onBlur, showMD}} md={v.md} save={(newVal) => save("text", newVal)} />)            
     } else if(d === "date") {
       let date = t?.date            
-      subElems.push(<DateEdit date={date} key={"date-"+k+"-project"+index} save={(val) => save("date", val)} />)
+      subElems.push(<DateEdit date={date} key={"date-"+k+"-project"+index} save={(newVal) => save("date", newVal)} />)
     } else if(d === "graph") {
       let data = t ;
       if(!data || !data.map) data = []
@@ -125,11 +125,11 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     } else if(d === "RID") {
       let text = t?.text
       if(!Array.isArray(text)) text = [ text ]
-      subElems.push(<RIDEdit text={text[i]} key={"RID-"+k+"-project"+index} save={(val) => save("text", val)} />)            
+      subElems.push(<RIDEdit text={text[i]} key={"RID-"+k+"-project"+index} save={(newVal) => save("text", newVal)} />)            
     } else if(Array.isArray(d)) {
       let type = t?.type
       //debug("type:",d,type)
-      subElems.push(<TypeEdit type={type} possible={d as any[]} key={"type-"+k+"-project"+index} save={(val) => save("type", val)} />)
+      subElems.push(<TypeEdit type={type} possible={d as any[]} key={"type-"+k+"-project"+index} save={(newVal) => save("type", newVal)} />)
     }
     return subElems
   }, [MD, index, replace, toSave])
@@ -231,7 +231,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
         const w = v[subK]
         if(w.hidden) { 
           hasHidden = true ;
-          debug("hidden:",w,w.hidden,hasHidden, showAll, k)
+          //debug("hidden:",w,w.hidden,hasHidden, showAll, k)
           if(!showAll[k]) continue; 
         }
         let data = (toSave as any)[k]
@@ -258,7 +258,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           </div>)
           n++
         } 
-        if(!w.unique) elems.push(<div><span className="add-btn"  onClick={() => add(w.data, data, k+"-"+subK)}>Add <AddCircleOutlineIcon /></span></div>)
+        if(!w.unique) elems.push(<div key="1"><span className="add-btn"  onClick={() => add(w.data, data, k+"-"+subK)}>Add <AddCircleOutlineIcon /></span></div>)
       }      
     }  
     renderedUI.push(<div key={"block-"+key} className={'block'+(on === k || on === "all"? " on":"")} onClick={(ev) => { 
@@ -267,8 +267,8 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
       }}>
       <h2>{title}</h2>
       <div>{elems}</div>
-      { hasHidden && <div><span className="hidden-btn" onClick={() => setShowAll({...showAll, [k]:!showAll[k]})}>{!showAll[k]?"Show hidden":"Hide"}</span></div>}
-      { !v.unique && <div><span className="add-btn" onClick={() => add(v.data, (toSave as any)[k])}>Add <AddCircleOutlineIcon /></span></div>}
+      { hasHidden && <div key="1"><span className="hidden-btn" onClick={() => setShowAll({...showAll, [k]:!showAll[k]})}>{!showAll[k]?"Show hidden":"Hide"}</span></div>}
+      { !v.unique && <div key="2"><span className="add-btn" onClick={() => add(v.data, (toSave as any)[k])}>Add <AddCircleOutlineIcon /></span></div>}
     </div>)
     links.push(<span key={"span-"+key} className={(on === k ? " on":"")}  onClick={(ev) => { 
       setOn(k) 
@@ -286,10 +286,10 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
     <div className={"edit-all "+(!unique?" all-on":"")} onClick={() => { if(unique) setOn("") }} >
       <h1>AO Dashboard</h1>
       <div> 
-        <nav>
+        <nav key="projects">
           { projects.map( (p,i) => <Link key={i} to={"/edit/"+i} onClick={ev => ev.stopPropagation()} className={index == i ? "on" : ""} >
-              <div>{p.title?.text || "New Project"}</div>
-              <div>{p.description?.text || "No description"}</div>
+              <div key="1">{p.title?.text || "New Project"}</div>
+              <div key="2">{p.description?.text || "No description"}</div>
             </Link>
           )}
           <div><span className="new-btn" onClick={create}>new project</span></div>
@@ -298,7 +298,7 @@ export default function EditProject(props:{ projects: ProjectData[], index?:numb
           <header><div></div><Link to={"/#project-"+index}>view in list</Link></header>
           { renderedUI }
         </main>
-        <nav>
+        <nav key="links">
           { links }
           <span className={(on === "all" ? " on":"")}  onClick={(ev) => { 
             setOn("all") 
