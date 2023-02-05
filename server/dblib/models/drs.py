@@ -75,7 +75,7 @@ class ProjectTypes(TimestampMixin, Base):
     Processing
     Distribution
     """
-    __tablename__ = "ao_project_types"
+    __tablename__ = "pm.project_types"
     project_type_name = Column(String(45), nullable=False)
     project_type_desc = Column(LONGTEXT)
 
@@ -89,14 +89,14 @@ class Projects(TimestampMixin, Base):
     """
     Timestamp mixin has the PK
     """
-    __tablename__ = "ao_projects"
+    __tablename__ = "pm.projects"
     name = Column(String(45))
     description = Column(LONGTEXT)
 
-    project_type_id = Column(Integer, ForeignKey('ao_project_types.id'))
+    project_type_id = Column(Integer, ForeignKey('pm.project_types.id'))
     project_type = relationship("ProjectTypes",back_populates="project")
 
-    m_type_id = Column(Integer, ForeignKey('ao_m_types.id'))
+    m_type_id = Column(Integer, ForeignKey('pm.member_types.id'))
     m_type = relationship("MemberTypes", back_populates="project")
 
     member = relationship("ProjectMembers", back_populates="project")
@@ -112,7 +112,7 @@ class MemberTypes(TimestampMixin, Base):
     work
     volume
     """
-    __tablename__ = "ao_m_types"
+    __tablename__ = "pm.member_types"
     m_type = Column(String(45), nullable=False)
     project = relationship('Projects', back_populates='m_type')
     members = relationship("ProjectMembers", back_populates="member_type")
@@ -129,7 +129,7 @@ class MemberStates(TimestampMixin, Base):
     in_progress
     complete
     """
-    __tablename__ = "m_states"
+    __tablename__ = "pm.member_states"
     m_state_name = Column(String(45), nullable=False)
     m_state_desc = Column(LONGTEXT)
 
@@ -144,18 +144,18 @@ class ProjectMembers(Base):
     State of each member in a project.
     PK
     """
-    __tablename__ = "project_members"
+    __tablename__ = "pm.project_members"
     pm_id = Column(Integer, primary_key=True, autoincrement=True)
-    pm_type = Column(Integer, ForeignKey('ao_m_types.id'))
+    pm_type = Column(Integer, ForeignKey('pm.member_types.id'))
 
     # Put in relationships when move into drs model
     pm_work_id = Column(Integer, ForeignKey('Works.workId'))
     pm_volume_id = Column(Integer, ForeignKey('Volumes.volumeId'))
     #
-    pm_project = Column(Integer, ForeignKey('ao_projects.id'))
+    pm_project = Column(Integer, ForeignKey('pm.projects.id'))
     project = relationship("Projects", back_populates="member")
 
-    pm_project_state_id = Column(Integer, ForeignKey('m_states.id'))
+    pm_project_state_id = Column(Integer, ForeignKey('pm.member_states.id'))
 
     member_type = relationship("MemberTypes", back_populates="members")
     project_state = relationship('MemberStates', back_populates="project_member")
